@@ -2,9 +2,8 @@ package chaosware
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
-	"os"
-	"strings"
 )
 
 type ChaosWare struct {
@@ -12,7 +11,8 @@ type ChaosWare struct {
 }
 
 type Settings struct {
-	PanicChance int
+	PanicChance  int // A chance between 1-100 representing probability in percent of how likely a panic will be.
+	PanicEnabled bool
 }
 
 func NewDefaultChaosMiddleware() ChaosWare {
@@ -23,18 +23,12 @@ func NewDefaultChaosMiddleware() ChaosWare {
 	return ChaosWare{}
 }
 
-func NewChaosMiddleware(settings Settings) ChaosWare {
-	return ChaosWare{settings: settings}
-}
-
-func (c ChaosWare) readSettingsFromEnv() {
-	envs := os.Environ()
-	for _, env := range envs {
-		if strings.HasPrefix(env, "CHAOSW_") {
-			parts := strings.SplitN(env, "=", 2)
-			fmt.Printf("%s=%s\n", parts[0], parts[1])
-		}
+func NewChaosMiddleware(settings Settings) (ChaosWare, error) {
+	if err := validateSettings(settings); err != nil {
+		return ChaosWare{}, fmt.Errorf("chaosware: failed to load settings: %v", err)
 	}
+
+	return ChaosWare{settings: settings}, nil
 }
 
 func (c ChaosWare) ChaosHandler(next http.Handler) http.Handler {
@@ -45,5 +39,9 @@ func (c ChaosWare) ChaosHandler(next http.Handler) http.Handler {
 }
 
 func (c ChaosWare) chaos(w http.ResponseWriter, r *http.Request) {
-
+	if c.settings.PanicEnabled {
+		if rand.Intn(100) < c.settings.PanicChance {
+			panic("chaosware: controlled panic")
+		}
+	}
 }
