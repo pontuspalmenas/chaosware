@@ -16,7 +16,7 @@ func (c ChaosWare) readSettingsFromEnv() {
 			case "CHAOSW_PANIC_CHANCE":
 				i, err := parsePanicChance(parts[1])
 				if err != nil {
-					failParse(parts[1], err)
+					failParse(parts[0], err)
 					continue
 				}
 				c.settings.PanicChance = i
@@ -24,7 +24,7 @@ func (c ChaosWare) readSettingsFromEnv() {
 			case "CHAOSW_PANIC_ENABLED":
 				b, err := parseBool(parts[1])
 				if err != nil {
-					failParse(parts[1], err)
+					failParse(parts[0], err)
 					continue
 				}
 				c.settings.PanicEnabled = b
@@ -34,7 +34,7 @@ func (c ChaosWare) readSettingsFromEnv() {
 }
 
 func failParse(key string, err error) {
-	fmt.Printf("Failed to parse env, skipping %s: %s\n", key, err.Error())
+	fmt.Printf("chaosware: failed to parse env, skipping %s: %s\n", key, err.Error())
 }
 
 func parsePanicChance(v string) (int, error) {

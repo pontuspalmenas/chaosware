@@ -40,8 +40,11 @@ func (c ChaosWare) ChaosHandler(next http.Handler) http.Handler {
 
 func (c ChaosWare) chaos(w http.ResponseWriter, r *http.Request) {
 	if c.settings.PanicEnabled {
+		fmt.Println("[trace] chaosware: enabled")
 		if rand.Intn(100) < c.settings.PanicChance {
+			fmt.Println("[trace] chaosware: panic")
 			panic("chaosware: controlled panic")
 		}
+		fmt.Println("[trace] chaosware: no panic")
 	}
 }
