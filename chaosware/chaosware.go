@@ -15,12 +15,12 @@ type Settings struct {
 	PanicEnabled bool
 }
 
-func NewDefaultChaosMiddleware() ChaosWare {
+func NewDefaultChaosMiddleware() *ChaosWare {
 	c := &ChaosWare{}
 	c.settings = &Settings{}
 	c.readSettingsFromEnv()
 
-	return ChaosWare{}
+	return c
 }
 
 func NewChaosMiddleware(settings *Settings) (ChaosWare, error) {
