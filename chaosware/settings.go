@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (c ChaosWare) readSettingsFromEnv() {
+func (c *ChaosWare) readSettingsFromEnv() {
 	envs := os.Environ()
 	for _, env := range envs {
 		if strings.HasPrefix(env, "CHAOSW_") {
@@ -56,7 +56,7 @@ func parseBool(s string) (bool, error) {
 	return v == "true", nil
 }
 
-func validateSettings(settings Settings) error {
+func validateSettings(settings *Settings) error {
 	if settings.PanicChance <= 0 || settings.PanicChance > 100 {
 		return fmt.Errorf("invalid panic chance: %d", settings.PanicChance)
 	}
