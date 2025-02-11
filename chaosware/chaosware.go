@@ -10,14 +10,8 @@ type ChaosWare struct {
 	settings *Settings
 }
 
-type Settings struct {
-	PanicChance  int // A chance between 1-100 representing probability in percent of how likely a panic will be.
-	PanicEnabled bool
-}
-
 func NewDefaultChaosMiddleware() *ChaosWare {
-	c := &ChaosWare{}
-	c.settings = &Settings{}
+	c := &ChaosWare{settings: &Settings{}}
 	c.readSettingsFromEnv()
 
 	return c
@@ -39,12 +33,15 @@ func (c *ChaosWare) ChaosHandler(next http.Handler) http.Handler {
 }
 
 func (c *ChaosWare) chaos(w http.ResponseWriter, r *http.Request) {
-	if c.settings.PanicEnabled {
-		fmt.Println("[trace] chaosware: enabled")
+	if c.settings.PanicChance > 0 {
 		if rand.Intn(100) < c.settings.PanicChance {
-			fmt.Println("[trace] chaosware: panic")
 			panic("chaosware: controlled panic")
 		}
-		fmt.Println("[trace] chaosware: no panic")
+	}
+	if c.settings.FreezeChance > 0 {
+		if rand.Intn(100) < c.settings.FreezeChance {
+			fmt.Println("chaosware: infinite freeze")
+			select {} // Block forever without eating up cpu
+		}
 	}
 }

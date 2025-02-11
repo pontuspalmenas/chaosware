@@ -35,9 +35,10 @@ func main() {
 You may use environment variables or in-code configuration. If you use configuration in code, environment variables are not read.
 Note that chaosware currently does not support config reload and only reads config at startup.
 
-| Setting               | Values | Description                                                                                                                      |
-|-----------------------|--------|----------------------------------------------------------------------------------------------------------------------------------|
-| `CHAOSW_PANIC_CHANCE` | 0-100  | The likelyhood of a `panic()`, in percentage. `25` means on average every fourth request triggers `panic()`. `0` means disabled. |
+| Setting                | Values | Description                                                                                                                                      |
+|------------------------|--------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| `CHAOSW_PANIC_CHANCE`  | 0-100  | The likelyhood of a `panic()`, in percentage. `25` means on average every fourth request triggers `panic()`. `0` means disabled.                 |
+| `CHAOSW_FREEZE_CHANCE` | 0-100  | The likelyhood of an infinite freeze, in percentage. `25` means on average every fourth request triggers an infinite freeze. `0` means disabled. |
 
 #### Example environment variables:
 ```
